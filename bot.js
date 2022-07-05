@@ -32,7 +32,8 @@ for (const file of commands) {
 logger.debug("All Loading command... Done!")
 
 // slash command
-
+// 一旦消す
+/*
 const slashFiles = fs.readdirSync("./src/slash").filter(file => file.endsWith(".js"));
 for (const file of slashFiles) {
   const command = require(`./src/slash/${file}`);
@@ -43,6 +44,7 @@ for (const file of slashFiles) {
   client.container.slashcmds.set(command.commandData.name, command);
 }
 logger.debug("All Loading Slash command... Done!")
+*/
 
 // Discord login
 client.login(config.token).catch(err => logger.error(err));
