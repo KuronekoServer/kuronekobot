@@ -123,6 +123,7 @@ async function run(){
         })
         message.reply({ embeds: [err_output_long]})
         logger.warn("コードの評価の出力値が500字を超えたため処理を中断しました")
+        return;
     }
 
     if(input >=350){
@@ -144,6 +145,7 @@ async function run(){
         })
         message.reply({ embeds: [err_input_long]})
         logger.warn("コードの評価の入力値が350字を超えたため処理を中断しました")
+        return;
     }
 
       // Reply in the channel with our result
