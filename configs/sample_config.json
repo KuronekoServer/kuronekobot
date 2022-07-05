@@ -15,23 +15,5 @@
         "eval": "true",
         "shell": "true",
         "shutdown": "true"
-    },
-    "log": {
-        "_comment": "logシステムの設定です。よくわからない場合無視してください",
-        "appenders": {
-            "system": { 
-                "type": "datefile",
-                "filename": "logs/system.log" 
-            }, 
-            "console": {
-                "type": "console"
-            }
-        },
-        "categories": {
-            "default": { 
-                "appenders": ["system", "console"], 
-                "level": "all" 
-            } 
-        }
     }
 }

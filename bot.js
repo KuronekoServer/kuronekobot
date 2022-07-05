@@ -8,6 +8,16 @@ const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_
 const fs = require("fs");
 client.commands = new Collection();
 logger.debug("module loading... Done!");
+
+// configあるかたしかめる
+if( fs.existsSync("./configs/config.json") ){
+  logger.debug( "configが設定されています...");
+}else{
+      logger.error("configファイルがありません (config not found) \n ./configs/sample_config.jsonをもとに ./configs/config.json を作成してください")
+      logger.error("Error: ENOENT: no such file or directory, open configs/config.json")
+      return;
+}
+
 const config = require('./src/utils/get-config.js');
 logger.debug("config Load ... Done!")
 
