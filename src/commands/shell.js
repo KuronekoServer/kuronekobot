@@ -1,9 +1,11 @@
 const logger = require('../modules/logger')
 const config = require('../utils/get-config');
 const notadmin = require('../utils/not-admin');
-const { MessageEmbed } = require('discord.js');
+const { MessageEmbed , MessageButton} = require('discord.js');
 const util = require('util');
 const child = require('child_process')
+const sleep = require('../modules/sleep')
+const err_embed = require('../utils/error-embed')
 
 exports.run = (client, message, args) => {
     try{
@@ -57,10 +59,10 @@ exports.run = (client, message, args) => {
 
             const input = command
             const input_count = input.length
-            if(input_count >=300){
+            if(input_count >=1000){
                 var err_input_long = new MessageEmbed({
                     title: "シェルコマンド実行",
-                    description: "ERROR: 入力値が300文字を超えました...",
+                    description: "ERROR: 入力値が1000文字を超えました...",
                     color: 16601703,
                     fields: [
                         {
@@ -74,32 +76,15 @@ exports.run = (client, message, args) => {
                     ]
                 })
             message.reply({ embeds: [err_input_long]})
-            logger.warn("シェルコマンド入力値が300文字を超えたため処理を中断しました...")
+            logger.warn("シェルコマンド入力値が1000文字を超えたため処理を中断しました... (文字数: " + input_count + "文字)")
             return;
         }
 
-            const output = res.slice(0, 2000)
-            const output_count = output.length
-            if(output_count >=800){
-                var err_output_long = new MessageEmbed({
-                    title: "シェルコマンド実行",
-                    description: "ERROR: 実行結果が800文字を超えたため表示しません...",
-                    color: 16601703,
-                    fields: [
-                        {
-                            name: "入力",
-                            value: "```\n"+ command + "\n```"
-                        },
-                        {
-                            name: "出力",
-                            value: "```sh\n"+ "実行結果が800文字以上でした..." + "\n```"
-                        }
-                    ]
-                })
-            message.reply({ embeds: [err_output_long]})
-            logger.warn("シェルコマンド実行結果が800文字を超えたため処理を中断しました")
-            return;
-            }
+            const output_1 = res.slice(0, 1000)
+            const output_2 = res.slice(1000, 2000)
+            const output_3 = res.slice(3000, 4000)
+            const output_4 = res.slice(4000, 5000)
+            const output_5 = res.slice(5000, 6000)
             if(err){
                 var err_shell = new MessageEmbed({
                     title: "シェルコマンド実行",
@@ -123,9 +108,9 @@ exports.run = (client, message, args) => {
             }
         
             // 実行成功時
-            var success = new MessageEmbed({
+            var page1 = new MessageEmbed({
                 title: "シェルコマンド実行",
-                description: "シェルコマンドを実行しました",
+                description: "シェルコマンドを実行しました (1ページ目)",
                 color: 3853014,
                 fields: [
                     {
@@ -134,34 +119,78 @@ exports.run = (client, message, args) => {
                     },
                     {
                         name: "出力",
-                        value: "```sh\n"+ output + "\n```"
+                        value: "```sh\n"+ output_1 + "\n```"
                     }
                 ]
             })
-    
-            message.reply({ embeds: [success]})
+            var page2 = new MessageEmbed({
+                title: "シェルコマンド実行",
+                description: "シェルコマンドを実行しました (2ページ目)",
+                color: 3853014,
+                fields: [
+                    {
+                        name: "2ページ目",
+                        value: "```sh\n"+ output_2 + "\n```"
+                    }
+                ]
+            })
+            var page3 = new MessageEmbed({
+                title: "シェルコマンド実行",
+                description: "シェルコマンドを実行しました (3ページ目)",
+                color: 3853014,
+                fields: [
+                    {
+                        name: "3ページ目",
+                        value: "```sh\n"+ output_3 + "\n```"
+                    }
+                ]
+            })
+            var page4 = new MessageEmbed({
+                title: "シェルコマンド実行",
+                description: "シェルコマンドを実行しました (4ページ目)",
+                color: 3853014,
+                fields: [
+                    {
+                        name: "4ページ目",
+                        value: "```sh\n"+ output_4 + "\n```"
+                    }
+                ]
+            })
+            var page5 = new MessageEmbed({
+                title: "シェルコマンド実行",
+                description: "シェルコマンドを実行しました (最終ページ)",
+                color: 3853014,
+                fields: [
+                    {
+                        name: "5ページ目",
+                        value: "```sh\n"+ output_5 + "\n```"
+                    }
+                ]
+            })
+
+            message.channel.send({ embeds: [page1]})
+                if(output_2.length >=1){
+                    message.channel.send({ embeds: [page2]})
+                }
+                if(output_3.length >=1){
+                    message.channel.send({ embeds: [page3]})
+                }
+                if(output_4.length >=1){
+                    message.channel.send({ embeds: [page4]})
+                }
+                if(output_5.length >=1){
+                    message.channel.send({ embeds: [page5]})
+                }
         })
     } catch (err) {
-         
-      try{
-      var error_msg = new MessageEmbed({
-          title: "コマンドの実行に失敗しました...",
-          color: 16601703,
-          fields: [
-              {
-                  name: "エラー内容",
-                  value: "```\n"+ err + "\n```"
-              }
-          ]
-      })
-    
-      logger.error("コマンド実行エラーが発生しました")
-      logger.error(err)
-      message.channel.send(({embeds: [error_msg]}))
-      } catch(send_error){
-          logger.error("Discordへのメッセージ送信に失敗しました...")
-          logger.error(send_error)
-      }
+            logger.error("コマンド実行エラーが発生しました")
+            logger.error(err)
+            message.channel.send(({embeds: [err_embed.main]}))
+            if(config.debug.enable.includes("true")){
+                message.channel.send(({embeds: [err_embed.debug]}))
+                message.channel.send("エラー内容: ")
+                message.channel.send("```\n"+ err + "\n```")
+            }
     }
 };
 

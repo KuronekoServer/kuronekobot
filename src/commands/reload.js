@@ -2,6 +2,7 @@ const logger = require('../modules/logger')
 const config = require('../utils/get-config');
 const notadmin = require('../utils/not-admin');
 const { MessageEmbed } = require('discord.js');
+const err_embed = require('../utils/error-embed')
 
 exports.run = (client, message, args) => {
     try{
@@ -68,27 +69,15 @@ exports.run = (client, message, args) => {
         message.reply({embeds: [reload_success]});
         logger.info("コマンドのreloadに成功しました! 実行者ID: " + message.author.id + " リロードされたコマンド: " + commandName)
     
-    } catch (err) {
-         
-      try{
-      var error_msg = new MessageEmbed({
-          title: "コマンドの実行に失敗しました...",
-          color: 16601703,
-          fields: [
-              {
-                  name: "エラー内容",
-                  value: "```\n"+ err + "\n```"
-              }
-          ]
-      })
-    
-      logger.error("コマンド実行エラーが発生しました")
-      logger.error(err)
-      message.channel.send(({embeds: [error_msg]}))
-      } catch(send_error){
-          logger.error("Discordへのメッセージ送信に失敗しました...")
-          logger.error(send_error)
-      }
+    } catch (err) {    
+            logger.error("コマンド実行エラーが発生しました")
+            logger.error(err)
+            message.channel.send(({embeds: [err_embed.main]}))
+            if(config.debug.enable.includes("true")){
+                message.channel.send(({embeds: [err_embed.debug]}))
+                message.channel.send("エラー内容: ")
+                message.channel.send("```\n"+ err + "\n```")
+            }
     }
   };
 

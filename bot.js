@@ -4,7 +4,7 @@ logger.debug('Starting System...')
 
 // モジュールの読み込み
 const { Client, Intents, Collection, MessageEmbed} = require('discord.js');
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_PRESENCES] });
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_PRESENCES, Intents.FLAGS.GUILD_VOICE_STATES] });
 const fs = require("fs");
 client.commands = new Collection();
 logger.debug("module loading... Done!");
@@ -21,15 +21,21 @@ if( fs.existsSync("./configs/config.json") ){
 const config = require('./src/utils/get-config.js');
 logger.debug("config Load ... Done!")
 
+// mongodbに接続
+logger.debug("Connected to mongodb")
+require('./src/utils/database')
+
 // ファイルの読み込み
 const events = fs.readdirSync("./src/events").filter(file => file.endsWith(".js"));
 for (const file of events) {
   const eventName = file.split(".")[0];
   const event = require(`./src/events/${file}`);
   client.on(eventName, event.bind(null, client));
-  logger.debug(`Loading event: ${eventName}`)
+  if(config.debug.enable.includes("true")){
+    logger.debug(`Loading Event: ${eventName}`);
+  }
 }
-logger.debug("All Loading event... Done!")
+logger.debug("Loading event... Done!")
 
 const commands = fs.readdirSync("./src/commands").filter(file => file.endsWith(".js"));
 for (const file of commands) {
@@ -37,28 +43,15 @@ for (const file of commands) {
   const command = require(`./src/commands/${file}`);
 
   client.commands.set(commandName, command);
-  logger.debug(`Loading command: ${commandName}`);
+  if(config.debug.enable.includes("true")){
+    logger.debug(`Loading command: ${commandName}`);
+  }
 }
-logger.debug("All Loading command... Done!")
-
-// slash command
-// 一旦消す
-/*
-const slashFiles = fs.readdirSync("./src/slash").filter(file => file.endsWith(".js"));
-for (const file of slashFiles) {
-  const command = require(`./src/slash/${file}`);
-  const commandName = file.split(".")[0];
-  logger.debug(`Loading slash command: ${commandName}`);
-  
-  // Now set the name of the command with it's properties.
-  client.container.slashcmds.set(command.commandData.name, command);
-}
-logger.debug("All Loading Slash command... Done!")
-*/
+logger.debug("Loading command... Done!")
 
 // Discord login
 client.login(config.token).catch(err => logger.error(err));
-logger.debug('Starting System... Done!')
 
+logger.debug('Starting System... Done!')
 // ログを表示
 require("./src/modules/info-logger")
