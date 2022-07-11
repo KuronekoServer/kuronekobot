@@ -2,7 +2,7 @@ const { MessageEmbed } = require('discord.js');
 const logger = require('../modules/logger')
 const package = require('../../package.json');
 const config = require('../utils/get-config')
-const prefix = config.prefix
+const prefix =  config.bot.prefix
 const err_embed = require('../utils/error-embed')
 
 exports.run = (client, message, args) => {

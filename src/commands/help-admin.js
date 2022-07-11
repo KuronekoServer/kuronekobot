@@ -5,7 +5,7 @@ const err_embed = require('../utils/error-embed')
 
 exports.run = (client, message, args) => {
     try{
-        const prefix = config.prefix
+        const prefix =  config.bot.prefix
         var embed = new MessageEmbed({
             title: "help-admin",
             description: "このコマンドはbot管理者のみ実行可能です",

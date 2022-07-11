@@ -12,12 +12,12 @@ module.exports = (client, message) => {
       const profileData = await profileModel.findOne({ _id: message.author.id });
       
       if (!profileData) {
-        var prefix = config.prefix
+        var prefix =  config.bot.prefix
       } else {
         var prefix = profileData.prefix
       }
 
-    //const prefix = config.prefix
+    //const prefix =  config.bot.prefix
     // Ignore messages not starting with the prefix
     if (message.content.indexOf(prefix) !== 0) return;
   
@@ -32,7 +32,7 @@ module.exports = (client, message) => {
               _id: message.author.id,
               name: message.author.username,
               avatar: message.author.displayAvatarURL({ format: 'png' }),
-              prefix: config.prefix,
+              prefix:  config.bot.prefix,
           });
           profile.save().catch((error) => {
             logger.error("ユーザー名: " + message.author.username + " ユーザーID: " + message.author.id + "のプロファイル作成中にエラーが発生しました...")

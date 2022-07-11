@@ -50,7 +50,7 @@ for (const file of commands) {
 logger.debug("Loading command... Done!")
 
 // Discord login
-client.login(config.token).catch(err => logger.error(err));
+client.login( config.bot.token).catch(err => logger.error(err));
 
 logger.debug('Starting System... Done!')
 // ログを表示

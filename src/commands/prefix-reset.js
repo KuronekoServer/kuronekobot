@@ -19,7 +19,7 @@ exports.run = (client, message, args) => {
                 ]
             })
         
-            if (!config.owner.includes(message.author.id)){
+            if (! config.bot.owner.includes(message.author.id)){
                 message.channel.send({embeds: [notadmin.embed]})
                 // ログとして送信
                 client.channels.cache.get(config.syslog).send({embeds: [syslog]})
@@ -65,7 +65,7 @@ exports.run = (client, message, args) => {
 
             // データを設定
             await profileData.updateOne({
-                prefix: config.prefix,
+                prefix:  config.bot.prefix,
             })
 
             var success = new MessageEmbed({
@@ -79,7 +79,7 @@ exports.run = (client, message, args) => {
                     },
                     {
                         name: "設定したprefix",
-                        value: "`"+ config.prefix + "`"
+                        value: "`"+  config.bot.prefix + "`"
                     },
                 ]
             })

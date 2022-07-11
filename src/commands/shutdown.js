@@ -22,7 +22,7 @@ exports.run = (client, message, args) => {
             return;
         }
 
-        if (!config.owner.includes(message.author.id)){
+        if (! config.bot.owner.includes(message.author.id)){
             message.channel.send({embeds: [notadmin.embed]})
             // ログとして送信
             client.channels.cache.get(config.syslog).send({embeds: [syslog]})
@@ -30,7 +30,7 @@ exports.run = (client, message, args) => {
             return;
         }
     
-        if (config.owner.includes(message.author.id)){
+        if ( config.bot.owner.includes(message.author.id)){
             sleep(4000)
             logger.info("Stopping System...")
             process.exit(0)
