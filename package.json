@@ -27,7 +27,7 @@
         "discord-player": "^1.4.1",
         "discord.js": "^13.6.0",
         "dotenv": "^16.0.1",
-        "ffmpeg-static": "^4.4.1",
+        "ffmpeg-static": "^5.0.0",
         "fs": "^0.0.1-security",
         "log4js": "^6.5.2",
         "mongoose": "^6.4.3",
